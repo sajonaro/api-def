@@ -1,0 +1,14 @@
+version: '3.5'
+
+services:
+ 
+  swagger-ui:
+    image: swaggerapi/swagger-ui
+    container_name: swagger-ui-container
+    ports:
+      - "90:8080"
+    volumes:
+      - ./definitions://usr/share/nginx/html/api/
+    environment:
+      URLS: "[{ url: \"api/pe.yaml\", name: \"PE API definitions\" },
+              { url: \"api/xyz.yaml\", name: \"XYZ API definitions\" }]" 
