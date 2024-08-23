@@ -1,4 +1,4 @@
-#payment method
+---
 PaymentMethod:
   description: "Платіжна система/метод оплати"
   type: object
@@ -13,7 +13,6 @@ PaymentMethod:
       enum:
         - app
         - site
-      default: app
     name:
       description: "Платіжна система/метод оплати, можливі значення: privat24, googlePay, portmone, applePay"
       type: string
@@ -23,4 +22,6 @@ PaymentMethod:
         - googlePay
         - portmone
         - applePay
-      default: privat24
+  example:
+    paymentType: "app"
+    name: "privat24"  

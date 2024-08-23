@@ -1,3 +1,4 @@
+---
 Merchant:
   description: "покупець"
   type: object
