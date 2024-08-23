@@ -7,9 +7,19 @@ info:
 externalDocs:
   description: find out more about swagger.io
   url: http://swagger.io
+
 servers:
-  - url: http://localhost:4040/api/v1
-    description: dev server
+  - url: https://{env}.bas-erp-int-api:{port}/v1
+    variables:
+      env:
+        default: api.example.com
+        description: Sandbox environment
+      port:
+        enum:
+          - '443'
+          - '8443'
+        default: '443'
+
 paths:
   /private-entrepreneur:
     get:
