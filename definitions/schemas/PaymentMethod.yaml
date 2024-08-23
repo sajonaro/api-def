@@ -1,0 +1,26 @@
+#payment method
+PaymentMethod:
+  description: "Платіжна система/метод оплати"
+  type: object
+  required:
+    - paymentType
+    - name
+  properties:
+    paymentType:
+      description: "Назва способу оплати, можливі значення: app, site"
+      required: true
+      type: string
+      enum:
+        - app
+        - site
+      default: app
+    name:
+      description: "Платіжна система/метод оплати, можливі значення: privat24, googlePay, portmone, applePay"
+      type: string
+      required: true
+      enum:
+        - privat24
+        - googlePay
+        - portmone
+        - applePay
+      default: privat24

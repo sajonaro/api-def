@@ -10,5 +10,5 @@ services:
     volumes:
       - ./definitions://usr/share/nginx/html/api/
     environment:
-      URLS: "[{ url: \"api/pe.yaml\", name: \"PE API definitions\" },
-              { url: \"api/example.yaml\", name: \"ex from HUB\" }]" 
+      URLS: "[{ url: \"api/pe-api.yaml\", name: \"PE API definitions\" },
+              { url: \"api/example-api.yaml\", name: \"exaple API from swagger HUB\" }]" 

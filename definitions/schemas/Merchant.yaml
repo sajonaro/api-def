@@ -1,0 +1,15 @@
+Merchant:
+  description: "покупець"
+  type: object
+  required:
+    - merchantId
+    - publicKey
+  properties:
+    merchantId:
+      description: 12 digits string
+      type: string
+      example: "i11111111111"
+    publicKey:
+      description: public key 6 digits
+      type: string
+      example: "123456"

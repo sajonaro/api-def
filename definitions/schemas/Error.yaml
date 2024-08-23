@@ -1,0 +1,12 @@
+#api error description
+Error:
+  description: "Api error description"
+  type: object
+  properties:
+    code:
+      type: integer
+      format: int32
+      example: 500
+    message:
+      type: string
+      example: "internal error"
