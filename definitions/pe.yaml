@@ -2,7 +2,7 @@ openapi: 3.0.3
 info:
   title: ФОП API
   description: |-
-    опис API для виконання операцій із ФОП
+    Опис API для виконання операцій із ФОП
   version: 0.0.1
 externalDocs:
   description: find out more about swagger.io
@@ -11,169 +11,114 @@ servers:
   - url: http://localhost:4040/api/v1
     description: dev server
 paths:
-  /game:
+  /pe:
     get:
-      summary: get a list of games
+      summary: get all PEs
+      description: зчитати всіх ФОП
       tags:
-        - game
-      operationId: getAllGames
+        - ФОП
+      operationId: getAllPs
       responses:
         '200':
           description: success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/games'
+                $ref: '#/components/schemas/pes'
     post:
       tags:
-        - game
-      summary: create new game
-      operationId: createGame
+        - ФОП
+      summary: create new PE
+      operationId: CreatePrivateEntrepreneur
       requestBody:
-        description: Create a new game
+        description: Create new PE
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/game'
+              $ref: '#/components/schemas/pe'
       responses:
         '200':
           description: Successful operation
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/game'          
+                $ref: '#/components/schemas/pe'          
         '405':
           description: Invalid input
-      security:
-        - starrealms_auth:
-            - write:games
-            - read:games
-  /connect/{player_name}:
-    post:
-      tags:
-        - player
-      summary: login into game server
-      description: no need to sign in to use the game.
-      operationId: createPlayer
-      parameters:
-        - name: player_name
-          in: path
-          description: player name connecting to server
-          required: true
-          schema:
-            type: string
-      requestBody:
-        description: Created player object
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/player'
-      responses:
-        default:
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/player'
-  /{gameId}/game/{playerId}/join:
-    put:
-      tags:
-        - player
-      summary: join specific game 
-      description: no need to sign in to use the game.
-      operationId: joinGame
-      parameters:
-        - name: playerId
-          in: path
-          description: player's ID connecting to server
-          required: true
-          schema:
-            type: integer
-            format: int32
-        - name: gameId
-          in: path
-          description: game ID player is willing to join
-          required: true
-          schema:
-            type: integer
-            format: int32
-      responses:
-        '200':
-          description: successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/player'
-        default:
-          description: exception
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/error"
-  /player:
-    get:
-      summary: get a list of players
-      tags:
-        - player
-      operationId: getAllplayers
-      responses:
-        '200':
-          description: success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/players'
+      security:    
+        - flowersua_auth:
+            - write:pe
+            - read:pe
+
+
 components:
   schemas:
-    player:
-      required:
-        - name
+    paymentMethod:
       type: object
       properties:
-        id:
-          type: integer
-          format: int64
-          example: 10
+        paymentType:
+          description: "Назва способу оплати, можливі значення: app, site"
+          required: true
+          type: string
+          enum:
+            - app
+            - site
+          default: app
+        name:
+          description: "Платіжна система/метод оплати, можливі значення: privat24, googlePay, portmone, applePay"
+          type: string
+          required: true
+          enum:
+            - privat24
+            - googlePay
+            - portmone
+            - applePay
+          default: privat24
+    merchant:
+      type: object
+      properties:
+        merchantId:
+          description: 12 digits string
+          type: string
+          example: "i11111111111"
+        publicKey:
+          description: public key 6 digits
+          type: string
+          example: "123456"
+
+    pe:
+      required:
+        - ipn
+        - name
+        - paymentMethod
+        - merchant
+      type: object
+      properties:
+        ipn:
+          description: "ІПН"
+          type: int64
+          example: "1112454509"
         name:
           type: string
-          example: theUser
-        movesFirst:
-          type: boolean
-          description: true if this player moves first
-          format: boolean
-          example: true
-    players:
+          example: "ФОП Петренко Є.І."
+        comment:
+          description: "Коментар, не обов'язкове поле" 
+          example: "ТТ, не подключать, 202 369.92 оборот на 23.12.23"
+        merchant:
+          type: object
+          $ref: '#/components/schemas/merchant'    
+        paymentMethod:
+           type: object
+           $ref: '#/components/schemas/paymentMethod'
+        fiscalGatewayId:
+          default: "checkBox.ua"  
+          description: "ID фіскального шлюзу"
+          type: string
+   
+    pes:
       type: array
       items:
-        $ref: '#/components/schemas/player'
-    game:
-      required:
-        - id
-        - createdBy
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-          example: 10
-        createdBy:
-          type: string
-          example: doggie
-        players:
-          type: array
-          items:
-            $ref: '#/components/schemas/player'
-        status:
-          type: string
-          description: game status
-          enum:
-            - created
-            - started
-            - ended
-    games:
-      type: array
-      items:
-        $ref: '#/components/schemas/game'
+        $ref: '#/components/schemas/pe'
     error:
       type: object
       properties:
@@ -197,29 +142,21 @@ components:
       xml:
         name: '##default'
   requestBodies:
-    game:
-      description: game object that needs to be created
+    pe:
+      description: pe object that needs to be created
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/game'
-    UserArray:
-      description: List of games
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/games'
+            $ref: '#/components/schemas/pe'
   securitySchemes:
-    starrealms_auth:
+    flowersua_auth:
       type: oauth2
       flows:
         implicit:
           authorizationUrl: https://localhost:4040/api/oauth/authorize
           scopes:
-            write:games: modify games in your account
-            read:games: read your games
+            write:pes: modify PEs in your account
+            read:pes: read PEs
     api_key:
       type: apiKey
       name: api_key

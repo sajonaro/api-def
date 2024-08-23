@@ -11,4 +11,4 @@ services:
       - ./definitions://usr/share/nginx/html/api/
     environment:
       URLS: "[{ url: \"api/pe.yaml\", name: \"PE API definitions\" },
-              { url: \"api/xyz.yaml\", name: \"XYZ API definitions\" }]" 
+              { url: \"api/example.yaml\", name: \"ex from HUB\" }]" 
